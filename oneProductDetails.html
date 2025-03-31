@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One Product Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        h2 {
+            color: #333;
+        }
+        .product-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .product-card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .product-card:hover {
+            transform: scale(1.05);
+        }
+        .product-card img {
+            width: 180px;
+            height: 180px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        .product-card h3 {
+            color: #007bff;
+            margin: 10px 0;
+        }
+        .product-card p {
+            font-size: 18px;
+            color: #555;
+        }
+        .product-card button {
+            background: #007bff;
+            color: #fff;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin: 5px;
+        }
+        .product-card button:hover {
+            background: #0056b3;
+        }
+        .product-card a button {
+            background: #28a745;
+        }
+        .product-card a button:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+
+<h2>One Product Details</h2>
+<div class="product-container" id="productContainer"></div>
+
+<script>
+    function getQueryParams() {
+        let params = new URLSearchParams(window.location.search);
+        return {
+            id: params.get("id"),
+            name: params.get("name"),
+            img: params.get("img"),
+            price: params.get("price")
+        };
+    }
+
+    function displayProduct() {
+        let product = getQueryParams();
+        let container = document.getElementById("productContainer");
+
+        if (product.name) {
+            container.innerHTML = `
+                <div class="product-card">
+                    <img src="${product.img}" alt="${product.name}">
+                    <h3>${product.name}</h3>
+                    <p>Price: ${product.price}</p>
+                    <button onclick="addToCart()">Add to Cart</button>
+                    <a href="cartPage.html"><button>Go to Cart</button></a>
+                </div>
+            `;
+        } else {
+            container.innerHTML = `<p>Product not found!</p>`;
+        }
+    }
+
+    function addToCart() {
+        let product = getQueryParams();
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        cart.push(product); // Add product to cart
+        localStorage.setItem("cart", JSON.stringify(cart));
+
+        alert("Product added to cart!");
+    }
+
+    window.onload = displayProduct;
+</script>
+
+</body>
+</html>

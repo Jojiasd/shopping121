@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Products</title>
+    <style>
+       .search-box {
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        margin-left: 10%;
+    }
+    .search-box input {
+        width: 100%;
+        padding: 12px 45px 12px 15px;
+        border: 2px solid #007bff;
+        border-radius: 8px;
+        box-sizing: border-box;
+        font-size: 16px;
+        outline: none;
+    }
+    .search-box button {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+    }
+    .search-box svg {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 20px;
+        height: 20px;
+        fill: #007bff;
+        cursor: pointer;
+    }
+    .suggestions {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        background: white;
+        border: 1px solid #ccc;
+        max-height: 250px;
+        overflow-y: auto;
+        display: none;
+        box-sizing: border-box;
+        border-radius: 8px;
+        box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+    }
+    .suggestions div {
+        padding: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        transition: background 0.3s, transform 0.2s;
+        font-size: 14px;
+        border-bottom: 1px solid #eee;
+    }
+    .suggestions div:last-child {
+        border-bottom: none;
+    }
+    .suggestions div img {
+        width: 40px;
+        height: 40px;
+        border-radius: 6px;
+        margin-right: 12px;
+        border: 1px solid #ddd;
+    }
+    .suggestions div:hover {
+        background: #8edbe9;
+        color: white;
+        transform: scale(1.02);
+    }
+    .suggestions div:hover img {
+        border-color: white;
+    }
+    @media (max-width: 600px) {
+        .search-box {
+            width: 90%;
+            margin-left: 5%;
+        }
+    }
+    .cart-link {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 24px;
+    background-color: #007bff;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
+}
+
+.cart-link:hover {
+    background-color: #0056b3;
+    text-decoration: none;
+    box-shadow: 0 6px 12px rgba(0, 86, 179, 0.3);
+    transform: translateY(-2px);
+}
+
+    </style>
+</head>
+<body>
+
+<h2>Search Products</h2>
+<div class="search-box">
+    <input type="text" id="search" placeholder="Search products..." onkeyup="showSuggestions()" aria-label="Search for products">
+    <button onclick="searchProducts()">
+        <svg viewBox="0 0 24 24">
+            <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.55l.27.28v.79l5 4.99L20.49 19l-4.99-5zM9.5 14C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+    </button>
+    
+    <div class="suggestions" id="suggestions"></div>
+</div>
+<a href="cartPage.html" class="cart-link">🛒 Go to Cart</a>
+<script>
+    const products = [
+        { id: 1, name: "iPhone 15", img: "https://images.samsung.com/is/image/samsung/assets/uk/smartphones/galaxy-s22-ultra/lifestyle-imagery/2_ultra_720.jpg?imwidth=360", price: "$999" },
+        { id: 2, name: "Samsung Galaxy S2", img: "https://sm.mashable.com/mashable_me/photo/default/sasmung-galaxy-s24-ultra-mashable_9kya.jpg", price: "$899" },
+        { id: 5, name: "Samsung Galaxy S23", img: "https://sm.mashable.com/mashable_me/photo/default/sasmung-galaxy-s24-ultra-mashable_9kya.jpg", price: "$899" },
+        { id: 7, name: "Samsung Galaxy S23", img: "https://sm.mashable.com/mashable_me/photo/default/sasmung-galaxy-s24-ultra-mashable_9kya.jpg", price: "$899" },
+        { id: 8, name: "Samsung Galaxy S23", img: "https://sm.mashable.com/mashable_me/photo/default/sasmung-galaxy-s24-ultra-mashable_9kya.jpg", price: "$899" },
+        { id: 9, name: "Samsung Galaxy S23", img: "https://sm.mashable.com/mashable_me/photo/default/sasmung-galaxy-s24-ultra-mashable_9kya.jpg", price: "$899" },
+        { id: 10, name: "Samsung Galaxy S23", img: "https://sm.mashable.com/mashable_me/photo/default/sasmung-galaxy-s24-ultra-mashable_9kya.jpg", price: "$899" },
+        
+        { id: 3, name: "MacBook Air", img: "https://via.placeholder.com/50", price: "$1299" },
+        { id: 4, name: "Sony Headphones", img: "https://www.t-mobile.com/dialed-in/_admin/uploads/2023/09/samsung-galaxy-s23-ultra-03.jpg", price: "$199" },
+    ];
+
+    function showSuggestions() { 
+    let input = document.getElementById("search").value.toLowerCase(); 
+    let suggestionsBox = document.getElementById("suggestions"); 
+    suggestionsBox.innerHTML = ""; 
+
+    if (input === "") { 
+        suggestionsBox.style.display = "none"; 
+        return; 
+    } 
+
+    let filteredProducts = products.filter(p => p.name.toLowerCase().includes(input)); 
+
+    if (filteredProducts.length > 0) { 
+        suggestionsBox.style.display = "block"; 
+        filteredProducts.forEach(p => { 
+            let div = document.createElement("div"); 
+            div.innerHTML = `<img src="${p.img}" alt="${p.name}"> ${p.name} - ${p.price}`; 
+            div.onclick = () => { 
+    window.location.href = `productDetails.html?id=${p.id}&name=${encodeURIComponent(p.name)}&img=${encodeURIComponent(p.img)}&price=${encodeURIComponent(p.price)}`;
+};
+
+
+
+
+            suggestionsBox.appendChild(div); 
+        }); 
+    } else { 
+        suggestionsBox.style.display = "none"; 
+    } 
+} 
+function searchProducts() {
+    let input = document.getElementById("search").value.trim().toLowerCase();
+    
+    if (!input) return;
+
+    let foundProducts = products.filter(p => p.name.toLowerCase().includes(input));
+
+    if (foundProducts.length > 0) {
+        // బహుళ products ని JSON format లో encode చేసి URL కు పంపించాలి
+        let productsData = encodeURIComponent(JSON.stringify(foundProducts));
+        window.location.href = `productDetails.html?products=${productsData}`;
+    } else {
+        alert("Product not found!");
+    }
+}
+
+
+document.getElementById("search").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        searchProducts();
+    }
+});
+
+
+document.addEventListener("click", (e) => { 
+    if (!document.querySelector(".search-box").contains(e.target)) { 
+        document.getElementById("suggestions").style.display = "none"; 
+    } 
+});
+</script>
+
+</body>
+</html>
