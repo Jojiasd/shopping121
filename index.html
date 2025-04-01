@@ -107,11 +107,48 @@
     box-shadow: 0 6px 12px rgba(0, 86, 179, 0.3);
     transform: translateY(-2px);
 }
+        .slider {
+border: 2px solid #007bff;
+            border-radius: 7px;
+            
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            width: 100vw;
+            max-width: 800px;
+            white-space: nowrap;
+            scrollbar-width: none;
+            margin-bottom: 20px;
+        }
+        .slider::-webkit-scrollbar {
+            display: none;
+        }
+        .slide {
+            flex: 0 0 100%;
+            scroll-snap-align: center;
+            background: #3498db;
+            color: white;
+            font-size: 24px;
+            text-align: center;
+            line-height: 200px;
+            width: 100%;
+            height: 250px;
+            border-radius: 10px;
+            margin-right: 10px;
+            overflow: hidden;
+        }
+        .slide img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+        }
 
     </style>
 </head>
 <body>
-
+<a href="cartPage.html" class="cart-link">🛒 Go to Cart</a>
+    
 <h2>Search Products</h2>
 <div class="search-box">
     <input type="text" id="search" placeholder="Search products..." onkeyup="showSuggestions()" aria-label="Search for products">
@@ -123,7 +160,7 @@
     
     <div class="suggestions" id="suggestions"></div>
 </div>
-<a href="cartPage.html" class="cart-link">🛒 Go to Cart</a>
+     <div class="slider" id="slider"></div>
 <script>
     const products = [
         { id: 1, name: "iPhone 15", img: "https://images.samsung.com/is/image/samsung/assets/uk/smartphones/galaxy-s22-ultra/lifestyle-imagery/2_ultra_720.jpg?imwidth=360", price: "$999" },
@@ -190,8 +227,27 @@ document.getElementById("search").addEventListener("keypress", function(event) {
         searchProducts();
     }
 });
-
-
+  // Banner Slider (Product Images)
+        const slider = document.getElementById("slider");
+        products.forEach(p => {
+            let div = document.createElement("div");
+            div.className = "slide";
+            div.innerHTML = `<img src="${p.img}" alt="${p.name}">`;
+            div.onclick = () => {
+                window.location.href = `productDetails.html?id=${p.id}&name=${encodeURIComponent(p.name)}&img=${encodeURIComponent(p.img)}&price=${encodeURIComponent(p.price)}`;
+            };
+            slider.appendChild(div);
+        });
+// Auto-slide functionality for the banner
+        let index = 0;
+        function autoSlide() {
+            index = (index + 1) % slider.children.length;
+            slider.scrollTo({
+                left: slider.children[index].offsetLeft,
+                behavior: "smooth"
+            });
+        }
+        setInterval(autoSlide, 5000);
 document.addEventListener("click", (e) => { 
     if (!document.querySelector(".search-box").contains(e.target)) { 
         document.getElementById("suggestions").style.display = "none"; 
