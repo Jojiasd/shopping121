@@ -96,9 +96,10 @@
     <tbody></tbody>
   </table>
 
-  <script>
+  
+<script>
     const sheetURL = "https://script.google.com/macros/s/AKfycbzOzfvNG6Yf90oq805AIMhUNg0_hwxeXDB-BJgfmyypDXKYOdUMvV8VFrY33C5q3mZp/exec";
-
+    
     fetch(sheetURL)
       .then(response => response.json())
       .then(data => {
@@ -116,8 +117,7 @@
         });
       })
       .catch(error => console.error("Error fetching data:", error));
-  </script>
-<script>
+    
     function getQueryParams() {
         let params = new URLSearchParams(window.location.search);
         return {
