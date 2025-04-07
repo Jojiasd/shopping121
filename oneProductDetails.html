@@ -12,24 +12,7 @@
             padding: 20px;
             text-align: center;
         }
-            .login-box {
-      background: white;
-      padding: 40px;
-      border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-    }
-    button {
-      width: 100%;
-      padding: 10px;
-      background: #4CAF50;
-      color: white;
-      border: none;
-    }
+            
         h2 {
             color: #333;
         }
@@ -86,43 +69,8 @@
     </style>
 </head>
 <body>
-  <div class="login-box">
-    <h2>Login</h2>
-    <form id="loginForm">
-      <input type="text" name="username" placeholder="Username" required />
-      <input type="password" name="password" placeholder="Password" required />
-      <button type="submit">Login</button>
-    </form>
-    <p id="responseMsg" style="color: red;"></p>
-  </div>
-<h2>One Product Details</h2>
-<div class="product-container" id="productContainer"></div>
-
+  
 <script>
-    const form = document.getElementById('loginForm');
-    const endpoint = "https://script.google.com/macros/s/AKfycby530y6KdY4VNKaDhzgIns5AtS-PBnUAqLWxiaoKh0usPyIVOzYlOccbyrE6PeWPq60Eg/exec";
-
-    form.addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      const formData = new FormData(form);
-
-      fetch(endpoint, {
-        method: 'POST',
-        body: formData
-      })
-      .then(res => res.text())
-      .then(data => {
-        document.getElementById('responseMsg').textContent = data;
-        if (data.toLowerCase().includes("success")) {
-          alert("Login successful!");
-          // Redirect or load next page here
-        }
-      })
-      .catch(err => {
-        document.getElementById('responseMsg').textContent = "Error: " + err;
-      });
-    });
     function getQueryParams() {
         let params = new URLSearchParams(window.location.search);
         return {
